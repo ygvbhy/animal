@@ -1,0 +1,15 @@
+{
+  "name": "animal",
+  "version": "1.0.0",
+  "description": "- vanilla js 활용 - 비동기 처리 - fetch 사용 - try - catch 문 사용",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

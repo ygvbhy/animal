@@ -5,19 +5,30 @@ import { request } from "./components/api.js";
 export default function App($app) {
   // 상태 관리
   this.state = {
-    currentTab: "all",
+    currentTab: window.location.pathname.split("/").pop() || "all",
     photos: [],
+  };
+
+  this.updateContent = async (tabName) => {
+    try {
+      const currentTab = tabName === "all" ? "" : tabName;
+      const photos = await request(currentTab);
+      this.setState({
+        ...this.state,
+        currentTab: tabName,
+        photos,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const tabBar = new TabBar({
     $app,
     initialState: "",
     onClick: async (name) => {
-      this.setState({
-        ...this.state,
-        currentTab: name,
-        photos: await request(name === "all" ? "" : name),
-      });
+      history.pushState(null, `${name} 사진`, name);
+      this.updateContent(name);
     },
   });
 
@@ -33,16 +44,12 @@ export default function App($app) {
     content.setState(this.state.photos);
   };
 
+  window.addEventListener("popstate", async () => {
+    this.updateContent(window.location.pathname.split("/").pop() || "all");
+  });
+
   const init = async () => {
-    try {
-      const initialPhotos = await request();
-      this.setState({
-        ...this.state,
-        photos: initialPhotos,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    this.updateContent(this.state.currentTab);
   };
 
   init();
